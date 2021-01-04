@@ -17,7 +17,8 @@ makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
              'swig' 'python' 'lib32-gcc-libs' 'lib32-libffi' 'libunwind' 'lib32-libunwind'
                'lib32-libxml2' 'lib32-zlib' 'python2' ) #tensorflow
 
-source=("llvm-project::git+https://github.com/llvm/llvm-project.git")
+source=("llvm-project::git+https://github.com/llvm/llvm-project.git"
+        "llvm-config.h")
 
 md5sums=('SKIP')
 sha512sums=('SKIP')
@@ -329,6 +330,13 @@ package_llvm-git() {
   # Remove libs which conflict with llvm-libs
   rm -f "$pkgdir"/usr/lib/{libLLVM,libLTO,LLVMgold,libRemarks}.so
   rm -f "$pkgdir"/usr/lib/python3.8/site-packages/six.py
+
+  if [[ $CARCH == x86_64 ]]; then
+   # Needed for multilib (https://bugs.archlinux.org/task/29951)
+   # Header stub is taken from Fedora
+   mv "$pkgdir/usr/include/llvm/Config/llvm-config"{,-64}.h
+   cp "$srcdir/llvm-config.h" "$pkgdir/usr/include/llvm/Config/llvm-config.h"
+  fi
 
   # make sure there are no files left to install
   find fakeinstall_64 -depth -print0 | xargs -0 rmdir
