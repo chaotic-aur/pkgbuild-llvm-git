@@ -5,7 +5,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git') 
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=12.0.0_r376006.c6ad00d70985
+pkgver=12.0.0_r376604.b02eab9058e5
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -20,8 +20,10 @@ makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
 source=("llvm-project::git+https://github.com/llvm/llvm-project.git"
         "llvm-config.h")
 
-md5sums=('SKIP')
-sha512sums=('SKIP')
+md5sums=('SKIP'
+         '295c343dcd457dc534662f011d7cff1a')
+sha512sums=('SKIP'
+            '75e743dea28b280943b3cc7f8bbb871b57d110a7f2b9da2e6845c1c36bf170dd883fca54e463f5f49e0c3effe07fbd0db0f8cf5a12a2469d3f792af21a73fcdd')
 options=('staticlibs')
 
 # NINJAFLAGS is an env var used to pass commandline options to ninja
