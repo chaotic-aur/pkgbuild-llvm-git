@@ -3,9 +3,9 @@
 
 # Based on LordHeavy's LLVM
 pkgbase=llvm-git
-pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-llvm-git') 
+pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-clang-git' 'lib32-llvm-git') 
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=12.0.0_r376604.b02eab9058e5
+pkgver=12.0.0_r376613.47991a15d192
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -361,15 +361,27 @@ package_lib32-llvm-libs-git() {
   install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
+package_lib32-clang-git() {
+  pkgdesc="C language family frontend for LLVM (32-bit)"
+  depends=('lib32-llvm-libs-git' 'gcc-multilib')
+  provides=('lib32-clang')
+  replaces=('lib32-clang')
+  conflicts=('lib32-clang')
+
+  _fakeinstall_32 fakeinstall_32/usr/lib32/clang
+  _fakeinstall_32 fakeinstall_32/usr/lib32/cmake/clang/
+  _fakeinstall_32 fakeinstall_32/usr/lib32/libclang*
+  install -Dm644 "$srcdir"/llvm-project/clang/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
 package_lib32-llvm-git() {
   pkgdesc='Low Level Virtual Machine (32-bit)(git version)'
   depends=("lib32-llvm-libs-git=$pkgver" 'llvm-git')
   provides=('lib32-llvm')
-  replaces=('lib32-llvm-svn' 'llvm-svn')
-  conflicts=('lib32-llvm-svn')
+  replaces=( 'lib32-llvm')
+  conflicts=('lib32-llvm')
 
   _fakeinstall_32 fakeinstall_32/usr/lib32
-  # Remove libs which conflict with llvm-libs
+  # Remove libs which conflict with lib32-llvm-libs
   rm -f "$pkgdir"/usr/lib32/{libLLVM,libLTO,LLVMgold,libRemarks}.so
 
   _fakeinstall_32 fakeinstall_32/usr/bin/llvm-config
