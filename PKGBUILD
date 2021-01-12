@@ -387,13 +387,14 @@ package_lib32-llvm-git() {
   _fakeinstall_32 fakeinstall_32/usr/bin/llvm-config
   mv -v "$pkgdir"/usr/bin/llvm-config "$pkgdir"/usr/lib32/llvm-config
 
+  _fakeinstall_32 fakeinstall_32/usr/include/llvm/config/llvm-config.h
   mv "$pkgdir"/usr/include/llvm/Config/llvm-config.h "$pkgdir"/usr/lib32/llvm-config-32.h
 
   rm -rf "$pkgdir"/usr/{bin/*,include,share/{doc,man,llvm,opt-viewer}}
   mv -v "$pkgdir"/usr/lib32/llvm-config "$pkgdir"/usr/bin/llvm-config32
 
   # make sure there are no files left to install
-  find fakeinstall_32 -depth -print0 | xargs -0 rm -r
+  find fakeinstall_32 -depth -print0 | xargs -0 rmd -r
 
   install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
