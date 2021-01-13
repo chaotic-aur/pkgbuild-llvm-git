@@ -5,7 +5,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-clang-git' 'lib32-llvm-git') 
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=12.0.0_r376613.47991a15d192
+pkgver=12.0.0_r376876.6f0f0220380f
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64')
@@ -129,7 +129,6 @@ build() {
         -D LLVM_BINUTILS_INCDIR=/usr/include \
         -D LLVM_BUILD_LLVM_DYLIB=ON \
         -D LLVM_LINK_LLVM_DYLIB=ON \
-        -D LLVM_ENABLE_BINDINGS=OFF \
         -D LLVM_ENABLE_RTTI=ON \
         -D LLVM_ENABLE_FFI=ON \
         -D LLVM_BUILD_TESTS=OFF \
@@ -140,7 +139,7 @@ build() {
         -D LLVM_BINUTILS_INCDIR=/usr/include \
         -D LLVM_APPEND_VC_REV=ON 
 
-    ninja -C _build32 all LLVMgold
+    ninja -C _build32 all ocaml_doc LLVMgold
     DESTDIR="$srcdir/fakeinstall_32" ninja -C _build32 install
 }
 
@@ -387,10 +386,14 @@ package_lib32-llvm-git() {
   _fakeinstall_32 fakeinstall_32/usr/bin/llvm-config
   mv -v "$pkgdir"/usr/bin/llvm-config "$pkgdir"/usr/lib32/llvm-config
 
-  _fakeinstall_32 fakeinstall_32/usr/include/llvm/config/llvm-config.h
+  _fakeinstall_32 fakeinstall_32/usr/include/llvm/Config/llvm-config.h
   mv "$pkgdir"/usr/include/llvm/Config/llvm-config.h "$pkgdir"/usr/lib32/llvm-config-32.h
 
   rm -rf "$pkgdir"/usr/{bin/*,include,share/{doc,man,llvm,opt-viewer}}
+  
+  install -d "$pkgdir/usr/include/llvm/Config"
+  mv "$pkgdir/usr/lib32/llvm-config-32.h" "$pkgdir/usr/include/llvm/Config/"
+
   mv -v "$pkgdir"/usr/lib32/llvm-config "$pkgdir"/usr/bin/llvm-config32
 
   # make sure there are no files left to install
