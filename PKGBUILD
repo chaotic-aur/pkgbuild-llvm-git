@@ -3,19 +3,19 @@
 
 # Based on LordHeavy's LLVM
 pkgbase=llvm-git
-pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-clang-git' 'lib32-llvm-git') 
+pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git'  'lib32-llvm-libs-git' 'lib32-clang-git' 'lib32-llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
 pkgver=12.0.0_r376876.6f0f0220380f
 pkgrel=1
 groups=('chaotic-mesa-git')
-arch=('x86_64')
+arch=('x86_64' 'armv7h' 'aarch64')
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
            'python-sphinx' 'ocaml' 'ocaml-ctypes' 'ocaml-findlib' 
             'python-sphinx' 'python-recommonmark' 'cuda' 'ocl-icd' 'opencl-headers'
              'swig' 'python' 'lib32-gcc-libs' 'lib32-libffi' 'libunwind' 'lib32-libunwind'
-               'lib32-libxml2' 'lib32-zlib' 'python2' ) #tensorflow
+             'lib32-libxml2' 'lib32-zlib' 'python2' 'tensorflow')
 
 source=("llvm-project::git+https://github.com/llvm/llvm-project.git"
         "llvm-config.h")
@@ -24,7 +24,7 @@ md5sums=('SKIP'
          '295c343dcd457dc534662f011d7cff1a')
 sha512sums=('SKIP'
             '75e743dea28b280943b3cc7f8bbb871b57d110a7f2b9da2e6845c1c36bf170dd883fca54e463f5f49e0c3effe07fbd0db0f8cf5a12a2469d3f792af21a73fcdd')
-options=('staticlibs')
+options=('staticlibs' 'debug')
 
 # NINJAFLAGS is an env var used to pass commandline options to ninja
 # NOTE: It's your responbility to validate the value of $NINJAFLAGS. If unsure, don't set it.
@@ -56,21 +56,23 @@ pkgver() {
 }
 
 prepare() {
- 
-    cd llvm-project 
+
+    cd llvm-project
     # llvm-project contains a lot of stuff, remove parts that aren't used by this package
     rm -rf debuginfo-tests libclc libcxx libcxxabi llgo openmp parallel-libs pstl libc
 
     rm -rf "$srcdir"/fakeinstall*
-    
-    export _ocamlver=$(ocamlc --version)
-    export _pythonver=$(python -V | sed 's/.* \([0-9]\).\([0-9]\).*/\1.\2/')
+
+    export _ocamlver="$(ocamlc --version)"
+    export _pythonver="$(python -V | sed 's/.* \([0-9]\).\([0-9]\).*/\1.\2/')"
 }
 
 build() {
-    export CFLAGS="$(echo "$CFLAGS" | sed -e "s/-fstack-protector-strong//") -I/usr/include/tensorflow "
-    export CXXFLAGS="$(echo "$CXXFLAGS" | sed -e "s/-fstack-protector-strong//") -I/usr/include/tensorflow "
-    export SAMUFLAGS="-j4"
+    CFLAGS+="-I/usr/include/tensorflow"
+    CXXFLAGS+="-I/usr/include/tensorflow"
+    CFLAGS+='-fasynchronous-unwind-tables'
+    CXXFLAGS+='-fasynchronous-unwind-tables'
+    LDFLAGS+='-fasynchronous-unwind-tables'
 
 #  export CC="clang -v"
 #  export CXX="clang++ -v"
@@ -169,11 +171,11 @@ package_lldb-git() {
      depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel")
      optdepends=('llvm-git: for the man file')
      provides=("lldb=$pkgver")
-     conflicts=('lldb')
+     conflicts=('lldb' 'lldb-svn')
      _fakeinstall_64 fakeinstall_64/usr/bin/lldb*
      _fakeinstall_64 fakeinstall_64/usr/include/lldb
      _fakeinstall_64 fakeinstall_64/usr/lib/liblldb*
-     _fakeinstall_64 fakeinstall_64/usr/lib/python"$_pythonver"/site-packages/lldb 
+     _fakeinstall_64 fakeinstall_64/usr/lib/python"$_pythonver"/site-packages/lldb
      _fakeinstall_64 fakeinstall_64/usr/share/man/man1/lldb*
     install -Dm644 "$srcdir"/llvm-project/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
@@ -182,9 +184,9 @@ package_lldb-git() {
 package_lld-git(){
    pkgdesc="Linker from the LLVM project"
    url="https://lld.llvm.org"
-   depends=("gcc-libs")
+   depends=("gcc-libs" "llvm-libs-git=$pkgver-$pkgrel")
    provides=("lld=$pkgver")
-   conflicts=('lld')
+   conflicts=('lld' 'lld-svn')
 
    _fakeinstall_64 fakeinstall_64/usr/include/lld
    _fakeinstall_64 fakeinstall_64/usr/lib/liblld*
@@ -230,8 +232,8 @@ package_clang-git() {
      depends=("llvm-git=$pkgver-$pkgrel" 'gcc' "python" 'python2')
      optdepends=('llvm-libs: for compiling with -flto')
      provides=("clang" 'clang-analyzer' 'clang-tools-extra')
-     conflicts=('clang' 'clang-svn' 'clang-analyzer' 'clang-tools-extra' 'clang-tools-extra-svn')
-     replaces=('clang-svn' 'clang-analyzer-svn' 'clang-tools-extra-svn' 'clang')
+     conflicts=('clang' 'clang-svn' 'clang-analyzer' 'clang-analyzer-svn' 'clang-tools-extra' 'clang-tools-extra-svn')
+     replaces=('clang-svn' 'clang-analyzer-svn' 'clang-tools-extra-svn')
 
     _fakeinstall_64 fakeinstall_64/usr/bin/*clang*
     _fakeinstall_64 fakeinstall_64/usr/bin/{c-index-test,diagtool,find-all-symbols}
@@ -280,7 +282,7 @@ package_llvm-libs-git() {
     pkgdesc="LLVM runtime libraries (git version)"
     depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'libxml2' 'ncurses')
     provides=("llvm-libs")
-    replaces=('llvm-libs-svn' 'llvm-libs')
+    replaces=('llvm-libs-svn')
     conflicts=('llvm-libs-svn' 'llvm-libs')
 
     _fakeinstall_64 fakeinstall_64/usr/lib/libLLVM-*.so*
@@ -324,7 +326,7 @@ package_llvm-git() {
   pushd "$srcdir"/llvm-project/llvm/utils/lit
   python3 setup.py install --root="$pkgdir" -O1
   popd
-  
+
   cp "$pkgdir"/usr/bin/lit "$pkgdir"/usr/bin/llvm-lit
   # Remove documentation sources
   rm -rf "$pkgdir"/usr/share/doc/llvm/html/{_sources,.buildinfo}
@@ -349,7 +351,7 @@ package_lib32-llvm-libs-git() {
   pkgdesc='Low Level Virtual Machine library (runtime library)(32-bit)(git version)'
   depends=('lib32-libffi' 'lib32-zlib' 'lib32-libxml2' 'lib32-gcc-libs')
   provides=("lib32-llvm-libs")
-  replaces=('lib32-llvm-libs-svn' 'lib32-llvm-libs')
+  replaces=('lib32-llvm-libs-svn')
   conflicts=('lib32-llvm-libs-svn' 'lib32-llvm-libs')
 
   _fakeinstall_32 fakeinstall_32/usr/lib32/libLLVM-*.so
@@ -362,10 +364,10 @@ package_lib32-llvm-libs-git() {
 
 package_lib32-clang-git() {
   pkgdesc="C language family frontend for LLVM (32-bit)"
-  depends=('lib32-llvm-libs-git' 'gcc-multilib')
+  depends=("lib32-llvm-libs-git=$pkgver-$pkgrel" "gcc-multilib")
   provides=('lib32-clang')
-  replaces=('lib32-clang')
-  conflicts=('lib32-clang')
+  replaces=('lib32-clang-svn')
+  conflicts=('lib32-clang' 'lib32-clang-svn')
 
   _fakeinstall_32 fakeinstall_32/usr/lib32/clang
   _fakeinstall_32 fakeinstall_32/usr/lib32/cmake/clang/
@@ -374,10 +376,10 @@ package_lib32-clang-git() {
 }
 package_lib32-llvm-git() {
   pkgdesc='Low Level Virtual Machine (32-bit)(git version)'
-  depends=("lib32-llvm-libs-git=$pkgver" 'llvm-git')
+  depends=("lib32-llvm-libs-git=$pkgver-$pkgrel" 'llvm-git')
   provides=('lib32-llvm')
-  replaces=( 'lib32-llvm')
-  conflicts=('lib32-llvm')
+  replaces=( 'lib32-llvm-svn')
+  conflicts=('lib32-llvm' 'lib32-llvm-svn')
 
   _fakeinstall_32 fakeinstall_32/usr/lib32
   # Remove libs which conflict with lib32-llvm-libs
@@ -390,7 +392,7 @@ package_lib32-llvm-git() {
   mv "$pkgdir"/usr/include/llvm/Config/llvm-config.h "$pkgdir"/usr/lib32/llvm-config-32.h
 
   rm -rf "$pkgdir"/usr/{bin/*,include,share/{doc,man,llvm,opt-viewer}}
-  
+
   install -d "$pkgdir/usr/include/llvm/Config"
   mv "$pkgdir/usr/lib32/llvm-config-32.h" "$pkgdir/usr/include/llvm/Config/"
 
