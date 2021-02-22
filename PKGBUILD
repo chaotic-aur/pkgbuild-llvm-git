@@ -94,12 +94,12 @@ build() {
         -D LLVM_BUILD_LLVM_DYLIB=ON \
         -D LLVM_LINK_LLVM_DYLIB=ON \
         -D LLVM_INSTALL_UTILS=ON \
-        -D LLVM_BUILD_DOCS=ON \
-        -D LLVM_INCLUDE_DOCS=ON \
+        -D LLVM_BUILD_DOCS=OFF \
+        -D LLVM_INCLUDE_DOCS=OFF \
         -D LLVM_ENABLE_DOXYGEN=OFF \
-        -D CLANG_INCLUDE_DOCS=ON \
+        -D CLANG_INCLUDE_DOCS=OFF \
         -D LLVM_EXPERIMENTAL_TARGETS_TO_BUILD=AVR \
-        -D LLVM_ENABLE_SPHINX=ON \
+        -D LLVM_ENABLE_SPHINX=OFF \
         -D SPHINX_OUTPUT_HTML=OFF \
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
         -D POLLY_ENABLE_GPGPU_CODEGEN=ON \
@@ -108,11 +108,11 @@ build() {
         -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang" \
         -D TENSORFLOW_C_LIB_PATH="/usr/" # Force on
 
-    ninja -C _build64 LLVMgold  all ocaml_doc
+    ninja -C _build64 LLVMgold all # ocaml_doc
     DESTDIR="$srcdir/fakeinstall_64" ninja -C _build64 install
 
     if [[ $CARCH == x86_64 ]]; then
-        export PKG_CONFIG_PATH="/usr/lb32/pkgconfig"
+        export PKG_CONFIG_PATH="/usr/lib32/pkgconfig"
 
         LIB32_CFLAGS="$CFLAGS"" -m32"
         LIB32_CXXFLAGS="$CXXFLAGS"" -m32"
@@ -182,7 +182,7 @@ package_lldb-git() {
     _fakeinstall_64 fakeinstall_64/usr/include/lldb
     _fakeinstall_64 fakeinstall_64/usr/lib/liblldb*
     _fakeinstall_64 fakeinstall_64/usr/lib/python"$_pythonver"/site-packages/lldb
-    _fakeinstall_64 fakeinstall_64/usr/share/man/man1/lldb*
+    # _fakeinstall_64 fakeinstall_64/usr/share/man/man1/lldb*
     install -Dm644 "$srcdir"/llvm-project/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
@@ -217,7 +217,7 @@ package_polly-git() {
     _fakeinstall_64 fakeinstall_64/usr/lib/*Polly*
     _fakeinstall_64 fakeinstall_64/usr/lib/libGPU*
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    _fakeinstall_64 fakeinstall_64/usr/share/man/man1/polly*
+    # _fakeinstall_64 fakeinstall_64/usr/share/man/man1/polly*
 }
 
 package_compiler-rt-git() {
@@ -264,7 +264,7 @@ package_clang-git() {
 
     _fakeinstall_64 fakeinstall_64/usr/share/clang
     _fakeinstall_64 fakeinstall_64/usr/share/scan{-build,-view}
-    _fakeinstall_64 fakeinstall_64/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*
+    # _fakeinstall_64 fakeinstall_64/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*
 
     # Remove documentation sources
     rm -rf "$pkgdir"/usr/share/doc/clang{,-tools}/html/{_sources,.buildinfo}
@@ -318,7 +318,7 @@ package_llvm-ocaml-git() {
     conflicts=('llvm-ocaml' 'llvm-ocaml-svn')
 
     _fakeinstall_64 fakeinstall_64/usr/lib/ocaml
-    _fakeinstall_64 fakeinstall_64/usr/share/doc/llvm/ocaml-html
+    # _fakeinstall_64 fakeinstall_64/usr/share/doc/llvm/ocaml-html
 
     install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 

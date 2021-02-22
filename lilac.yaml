@@ -1,0 +1,14 @@
+maintainers:
+    - github: solaraquarion
+build_prefix: multilib
+
+pre_build: vcs_update
+post_build: git_pkgbuild_commit
+
+update_on:
+  - source: vcs
+  - source: archpkg
+    archpkg: ocaml
+    from_pattern: ^(\d+\.\d+\.\d+).*
+    to_pattern: \1
+  - alias: python
