@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=13.0.0_r386096.6048d1d19c55
+pkgver=13.0.0_r386600.e439a463a308
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -98,7 +98,7 @@ build() {
         -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang" \
         -D TENSORFLOW_C_LIB_PATH="/usr/" # Force on
 
-    ninja -C _build LLVMgold all ocaml_doc
+    ninja -j8 -C _build LLVMgold all ocaml_doc
     DESTDIR="$srcdir/fakeinstall" ninja -C _build install
 }
 
@@ -158,7 +158,7 @@ package_polly-git() {
     _fakeinstall fakeinstall/usr/lib/*Polly*
     _fakeinstall fakeinstall/usr/lib/libGPU*
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-     _fakeinstall fakeinstall/usr/share/doc/polly
+ #    _fakeinstall fakeinstall/usr/share/doc/polly
      _fakeinstall fakeinstall/usr/share/man/man1/polly.1
 }
 
@@ -205,7 +205,7 @@ package_clang-git() {
     _fakeinstall fakeinstall/usr/lib/cmake/clang
 
     _fakeinstall fakeinstall/usr/libexec
-    _fakeinstall fakeinstall/usr/share/doc/clang*
+ #   _fakeinstall fakeinstall/usr/share/doc/clang*
     _fakeinstall fakeinstall/usr/share/clang
     _fakeinstall fakeinstall/usr/share/scan{-build,-view}
     _fakeinstall fakeinstall/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*
