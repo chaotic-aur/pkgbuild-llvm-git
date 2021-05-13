@@ -210,7 +210,8 @@ package_clang-git() {
  #   _fakeinstall fakeinstall/usr/share/doc/clang*
     _fakeinstall fakeinstall/usr/share/clang
     _fakeinstall fakeinstall/usr/share/scan{-build,-view}
-    _fakeinstall fakeinstall/usr/share/man/man1/1/{clang,diagtool,extraclangtools,scan-build}*
+    _fakeinstall fakeinstall/usr/share/man/man1/1/{clang,diagtool,extraclangtools}*
+    _fakeinstall fakeinstall/usr/share/man/man1/scan-build*
 
     # Remove documentation sources
     rm -rf "$pkgdir"/usr/share/doc/clang{,-tools}/html/{_sources,.buildinfo}
