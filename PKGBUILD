@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=13.0.0_r387849.be23d5e81439
+pkgver=13.0.0_r389175.6f9ac11e3960
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -99,7 +99,7 @@ build() {
         -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang" \
         -D TENSORFLOW_C_LIB_PATH="/usr/" # Force on
 
-    ninja -C _build LLVMgold all ocaml_doc
+    ninja -j6 -C _build LLVMgold all ocaml_doc
     DESTDIR="$srcdir/fakeinstall" ninja -C _build install
 }
 
@@ -127,7 +127,7 @@ package_lldb-git() {
     _fakeinstall fakeinstall/usr/include/lldb
     _fakeinstall fakeinstall/usr/lib/liblldb*
     _fakeinstall fakeinstall/usr/lib/python"$_pythonver"/site-packages/lldb
-    _fakeinstall fakeinstall/usr/share/man/man1/1/lldb*
+    _fakeinstall fakeinstall/usr/share/man/man1/lldb*
     install -Dm644 "$srcdir"/llvm-project/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
@@ -161,7 +161,7 @@ package_polly-git() {
     _fakeinstall fakeinstall/usr/lib/libGPU*
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
  #    _fakeinstall fakeinstall/usr/share/doc/polly
-     _fakeinstall fakeinstall/usr/share/man/man1/1/polly*
+     _fakeinstall fakeinstall/usr/share/man/man1/polly*
 }
 
 package_compiler-rt-git() {
@@ -210,8 +210,7 @@ package_clang-git() {
  #   _fakeinstall fakeinstall/usr/share/doc/clang*
     _fakeinstall fakeinstall/usr/share/clang
     _fakeinstall fakeinstall/usr/share/scan{-build,-view}
-    _fakeinstall fakeinstall/usr/share/man/man1/1/{clang,diagtool,extraclangtools}*
-    _fakeinstall fakeinstall/usr/share/man/man1/scan-build*
+    _fakeinstall fakeinstall/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*
 
     # Remove documentation sources
     rm -rf "$pkgdir"/usr/share/doc/clang{,-tools}/html/{_sources,.buildinfo}
