@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=13.0.0_r389175.6f9ac11e3960
+pkgver=13.0.0_r389248.54c2687292da
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -99,7 +99,7 @@ build() {
         -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang" \
         -D TENSORFLOW_C_LIB_PATH="/usr/" # Force on
 
-    ninja -C _build LLVMgold all ocaml_doc
+    ninja -j6 -C _build LLVMgold all ocaml_doc
     DESTDIR="$srcdir/fakeinstall" ninja -C _build install
 }
 
