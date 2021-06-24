@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=13.0.0_r389248.54c2687292da
+pkgver=13.0.0_r391534.0873016ceff3
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -216,7 +216,7 @@ package_clang-git() {
     rm -rf "$pkgdir"/usr/share/doc/clang{,-tools}/html/{_sources,.buildinfo}
 
     # Move analyzer scripts out of /usr/libexec
-    mv "$pkgdir"/usr/libexec/{ccc,c++}-analyzer "$pkgdir/usr/lib/clang/"
+    mv "$pkgdir"/usr/libexec/* "$pkgdir/usr/lib/clang/"
     rmdir "$pkgdir/usr/libexec"
     sed -i 's|libexec|lib/clang|' "$pkgdir/usr/bin/scan-build"
     # Install Python bindings
