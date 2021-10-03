@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=13.0.0_r391534.0873016ceff3
+pkgver=14.0.0_r400661.d6482df683b9
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -13,7 +13,7 @@ license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
              'python-sphinx' 'ocaml' 'ocaml-ctypes' 'ocaml-findlib' 'lua53'
              'python-recommonmark' 'python-sphinx-automodapi' 'cuda' 'ocl-icd' 'opencl-headers'
-             'swig' 'python' 'libunwind' 'python2' 'tensorflow')
+             'swig' 'python' 'libunwind' 'python2')
 
 source=("llvm-project::git+https://github.com/llvm/llvm-project.git"
         "llvm-config.h")
@@ -96,8 +96,7 @@ build() {
         -D LLVM_VERSION_SUFFIX="" \
         -D LLDB_ENABLE_PYTHON=ON \
         -D LLDB_USE_SYSTEM_SIX=1 \
-        -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang" \
-        -D TENSORFLOW_C_LIB_PATH="/usr/" # Force on
+        -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang" 
 
     ninja -C _build LLVMgold all ocaml_doc
     DESTDIR="$srcdir/fakeinstall" ninja -C _build install
