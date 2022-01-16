@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=14.0.0_r400661.d6482df683b9
+pkgver=14.0.0_r411204.da77db58d762
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -113,7 +113,7 @@ _fakeinstall () {
 }
 
 package_lldb-git() {
-    _pythonver="$(python -V | sed 's/.* \([0-9]\).\([0-9]\).*/\1.\2/')"
+    _pythonver="$(python -V | sed 's/.* \([0-9]\)\.\([0-9]*\)\..*/\1.\2/')"
 
     pkgdesc="Next generation, high-performance debugger (git version)"
     url="https://lldb.llvm.org/"
@@ -181,7 +181,7 @@ package_compiler-rt-git() {
 }
 
 package_clang-git() {
-    _pythonver="$(python -V | sed 's/.* \([0-9]\).\([0-9]\).*/\1.\2/')"
+    _pythonver="$(python -V | sed 's/.* \([0-9]\)\.\([0-9]*\)\..*/\1.\2/')"
 
     pkgdesc="C language family frontend for LLVM (git version)"
     url="http://clang.llvm.org/"
