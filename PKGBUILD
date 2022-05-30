@@ -268,7 +268,7 @@ package_llvm-ocaml-git() {
     conflicts=('llvm-ocaml' 'llvm-ocaml-svn')
 
     _fakeinstall fakeinstall/usr/lib/ocaml
-    _fakeinstall fakeinstall/usr/share/doc/llvm/ocaml-html
+#    _fakeinstall fakeinstall/usr/share/doc/llvm/ocaml-html
 
     install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
