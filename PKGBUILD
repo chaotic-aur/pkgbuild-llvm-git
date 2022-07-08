@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-ocaml-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=14.0.0_r411204.da77db58d762
+pkgver=15.0.0_r429167.ab9e8a3a6f28
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -173,7 +173,7 @@ package_compiler-rt-git() {
 
     local _llvmver=$(echo "$pkgver" | grep -Po "(^[\.\d]+)")
 
-    _fakeinstall fakeinstall/usr/lib/clang/"$_llvmver"/lib/linux
+    _fakeinstall fakeinstall/usr/lib/clang/"$_llvmver"/lib/"$CHOST"
     _fakeinstall fakeinstall/usr/lib/clang/"$_llvmver"/include/{sanitizer,xray}
     _fakeinstall fakeinstall/usr/lib/clang/"$_llvmver"/share
 
@@ -268,7 +268,6 @@ package_llvm-ocaml-git() {
     conflicts=('llvm-ocaml' 'llvm-ocaml-svn')
 
     _fakeinstall fakeinstall/usr/lib/ocaml
-#    _fakeinstall fakeinstall/usr/share/doc/llvm/ocaml-html
 
     install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
