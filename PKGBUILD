@@ -195,7 +195,7 @@ package_clang-git() {
 
     _fakeinstall fakeinstall/usr/bin/*clang*
     _fakeinstall fakeinstall/usr/bin/{c-index-test,diagtool,find-all-symbols}
-    _fakeinstall fakeinstall/usr/bin/{hmaptool,modularize,scan-build,scan-view}
+    _fakeinstall fakeinstall/usr/bin/{hmaptool,modularize,scan-build,scan-build-py,scan-view,analyze-build,intercept-build}
     _fakeinstall fakeinstall/usr/bin/pp-trace
 
     _fakeinstall fakeinstall/usr/include/clang*
