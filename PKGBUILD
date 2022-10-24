@@ -128,7 +128,6 @@ package_lldb-git() {
     _fakeinstall fakeinstall/usr/lib/python"$_pythonver"/site-packages/lldb
     _fakeinstall fakeinstall/usr/share/man/man1/lldb*
     _fakeinstall fakeinstall/usr/share/doc/lldb/*
-    #mv $pkgdir/usr/share/doc/lldb/lldb/* /usr/share/doc/lldb/
     install -Dm644 "$srcdir"/llvm-project/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     rm -r "$pkgdir"/usr/share/doc/lldb/html/.buildinfo
 }
