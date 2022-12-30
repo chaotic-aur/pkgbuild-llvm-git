@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=16.0.0_r439696.9cedab654d58
+pkgver=16.0.0_r447001.6c232db2ae93
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -117,7 +117,7 @@ package_lldb-git() {
 
     pkgdesc="Next generation, high-performance debugger (git version)"
     url="https://lldb.llvm.org/"
-    depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel")
+    depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel" "lua53" "zstd")
     provides=("lldb=$pkgver")
     replaces=('lldb-svn')
     optdepends=('lua53: scripting support')
@@ -135,7 +135,7 @@ package_lldb-git() {
 package_lld-git(){
     pkgdesc="Linker from the LLVM project"
     url="https://lld.llvm.org"
-    depends=("llvm-libs-git=$pkgver-$pkgrel")
+    depends=("llvm-libs-git=$pkgver-$pkgrel" "zstd")
     provides=("lld=$pkgver")
     replaces=('lld-svn')
     conflicts=('lld' 'lld-svn')
@@ -178,7 +178,7 @@ package_compiler-rt-git() {
     replaces=('compiler-rt-svn')
     conflicts=('compiler-rt' 'compiler-rt-svn')
 
-    local _llvmver=$(echo "$pkgver" | grep -Po "(^[\.\d]+)")
+    local _llvmver=$(echo "$pkgver" | grep -Po "(^[\d]+)")
 
     _fakeinstall fakeinstall/usr/lib/clang/"$_llvmver"/lib/"$CHOST"
     _fakeinstall fakeinstall/usr/lib/clang/"$_llvmver"/include/{sanitizer,xray}
@@ -243,7 +243,7 @@ package_clang-git() {
 
 package_llvm-libs-git() {
     pkgdesc="LLVM runtime libraries (git version)"
-    depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'libxml2' 'ncurses' 'tensorflow')
+    depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'libxml2' 'ncurses' 'tensorflow' 'zstd')
     provides=("llvm-libs=$pkgver")
     replaces=('llvm-libs-svn')
     conflicts=('llvm-libs-svn' 'llvm-libs')
@@ -260,7 +260,7 @@ package_llvm-libs-git() {
 
 package_llvm-git() {
     pkgdesc="Collection of modular and reusable compiler and toolchain technologies (git version)"
-    depends=("llvm-libs-git=$pkgver-$pkgrel" 'perl')
+    depends=("llvm-libs-git=$pkgver-$pkgrel" 'perl' 'python-yaml' 'python-psutil' 'python-pygments')
     optdepends=('python-setuptools: for using lit (LLVM Integrated Tester)')
     provides=("llvm=$pkgver")
     replaces=('llvm-svn')
