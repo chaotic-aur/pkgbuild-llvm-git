@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=16.0.0_r447001.6c232db2ae93
+pkgver=16.0.0_r448939.da5a8d14b8cc
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
