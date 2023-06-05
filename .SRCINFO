@@ -1,9 +1,11 @@
 pkgbase = llvm-git
 	pkgdesc = Low Level Virtual Machine (git version)
-	pkgver = 12.0.0_r376613.47991a15d192
+	pkgver = 17.0.0_r463216.29663e2b8c4e
 	pkgrel = 1
 	url = https://llvm.org/
 	arch = x86_64
+	arch = armv7h
+	arch = aarch64
 	groups = chaotic-mesa-git
 	license = custom:Apache 2.0 with LLVM Exception
 	makedepends = git
@@ -14,23 +16,17 @@ pkgbase = llvm-git
 	makedepends = ncurses
 	makedepends = libxml2
 	makedepends = python-sphinx
-	makedepends = ocaml
-	makedepends = ocaml-ctypes
-	makedepends = ocaml-findlib
-	makedepends = python-sphinx
+	makedepends = lua53
 	makedepends = python-recommonmark
+	makedepends = python-sphinx-automodapi
 	makedepends = cuda
 	makedepends = ocl-icd
 	makedepends = opencl-headers
+	makedepends = python-yaml
+	makedepends = python-setuptools
 	makedepends = swig
 	makedepends = python
-	makedepends = lib32-gcc-libs
-	makedepends = lib32-libffi
 	makedepends = libunwind
-	makedepends = lib32-libunwind
-	makedepends = lib32-libxml2
-	makedepends = lib32-zlib
-	makedepends = python2
 	options = staticlibs
 	source = llvm-project::git+https://github.com/llvm/llvm-project.git
 	source = llvm-config.h
@@ -42,63 +38,66 @@ pkgbase = llvm-git
 pkgname = lldb-git
 	pkgdesc = Next generation, high-performance debugger (git version)
 	url = https://lldb.llvm.org/
-	depends = clang-git=12.0.0_r376613.47991a15d192-1
-	depends = llvm-libs-git=12.0.0_r376613.47991a15d192-1
-	optdepends = llvm-git: for the man file
-	provides = lldb=12.0.0_r376613.47991a15d192
+	depends = clang-git=17.0.0_r463216.29663e2b8c4e-1
+	depends = llvm-libs-git=17.0.0_r463216.29663e2b8c4e-1
+	depends = lua53
+	depends = zstd
+	optdepends = lua53: scripting support
+	provides = lldb=17.0.0_r463216.29663e2b8c4e
 	conflicts = lldb
+	conflicts = lldb-svn
+	replaces = lldb-svn
 
 pkgname = lld-git
 	pkgdesc = Linker from the LLVM project
 	url = https://lld.llvm.org
-	depends = gcc-libs
-	provides = lld=12.0.0_r376613.47991a15d192
+	depends = llvm-libs-git=17.0.0_r463216.29663e2b8c4e-1
+	depends = zstd
+	provides = lld=17.0.0_r463216.29663e2b8c4e
 	conflicts = lld
+	conflicts = lld-svn
+	replaces = lld-svn
 
 pkgname = polly-git
 	pkgdesc = Polly is a high-level loop and data-locality optimizer and optimization infrastructure for LLVM
 	url = https://polly.llvm.org/
-	arch = any
-	depends = llvm-git=12.0.0_r376613.47991a15d192-1
+	depends = llvm-libs-git=17.0.0_r463216.29663e2b8c4e-1
+	provides = polly=17.0.0_r463216.29663e2b8c4e
+	conflicts = polly
+	conflicts = polly-svn
+	replaces = polly-svn
 
 pkgname = compiler-rt-git
 	pkgdesc = Compiler runtime libraries for clang (git version)
 	url = https://compiler-rt.llvm.org/
-	depends = llvm-git=12.0.0_r376613.47991a15d192-1
 	depends = gcc-libs
-	provides = compiler-rt
-	conflicts = clang-svn
+	depends = llvm-git=17.0.0_r463216.29663e2b8c4e-1
+	provides = compiler-rt=17.0.0_r463216.29663e2b8c4e
+	conflicts = compiler-rt
+	conflicts = compiler-rt-svn
+	replaces = compiler-rt-svn
 
 pkgname = clang-git
 	pkgdesc = C language family frontend for LLVM (git version)
 	url = http://clang.llvm.org/
-	depends = llvm-git=12.0.0_r376613.47991a15d192-1
+	depends = llvm-libs-git=17.0.0_r463216.29663e2b8c4e-1
 	depends = gcc
-	depends = python
-	depends = python2
-	optdepends = llvm-libs: for compiling with -flto
-	provides = clang
-	provides = clang-analyzer
-	provides = clang-tools-extra
+	depends = compiler-rt-git=17.0.0_r463216.29663e2b8c4e-1
+	optdepends = llvm-git: refered by some clang-headers
+	optdepends = python: for scan-view and git-clang-format
+	optdepends = perl: for scanbuild, c++-analyzer, and ccc-analyzer
+	provides = clang=17.0.0_r463216.29663e2b8c4e
+	provides = clang-analyzer=17.0.0_r463216.29663e2b8c4e
+	provides = clang-tools-extra=17.0.0_r463216.29663e2b8c4e
 	conflicts = clang
 	conflicts = clang-svn
 	conflicts = clang-analyzer
+	conflicts = clang-analyzer-svn
 	conflicts = clang-tools-extra
 	conflicts = clang-tools-extra-svn
 	replaces = clang-svn
 	replaces = clang-analyzer-svn
 	replaces = clang-tools-extra-svn
-	replaces = clang
-
-pkgname = llvm-ocaml-git
-	pkgdesc = OCaml bindings for LLVM (git version)
-	depends = llvm-git=12.0.0_r376613.47991a15d192-1
-	depends = ocaml=
-	depends = ocaml-ctypes
-	provides = llvm-ocaml
-	conflicts = llvm-ocaml
-	conflicts = llvm-ocaml-svn
-	replaces = llvm-ocaml-svn
 
 pkgname = llvm-libs-git
 	pkgdesc = LLVM runtime libraries (git version)
@@ -108,47 +107,22 @@ pkgname = llvm-libs-git
 	depends = libedit
 	depends = libxml2
 	depends = ncurses
-	provides = llvm-libs
+	depends = tensorflow
+	depends = zstd
+	provides = llvm-libs=17.0.0_r463216.29663e2b8c4e
 	conflicts = llvm-libs-svn
 	conflicts = llvm-libs
 	replaces = llvm-libs-svn
-	replaces = llvm-libs
 
 pkgname = llvm-git
 	pkgdesc = Collection of modular and reusable compiler and toolchain technologies (git version)
-	depends = llvm-libs-git=12.0.0_r376613.47991a15d192
+	depends = llvm-libs-git=17.0.0_r463216.29663e2b8c4e-1
 	depends = perl
+	depends = python-yaml
+	depends = python-psutil
+	depends = python-pygments
 	optdepends = python-setuptools: for using lit (LLVM Integrated Tester)
-	provides = llvm
+	provides = llvm=17.0.0_r463216.29663e2b8c4e
 	conflicts = llvm
 	conflicts = llvm-svn
 	replaces = llvm-svn
-
-pkgname = lib32-llvm-libs-git
-	pkgdesc = Low Level Virtual Machine library (runtime library)(32-bit)(git version)
-	depends = lib32-libffi
-	depends = lib32-zlib
-	depends = lib32-libxml2
-	depends = lib32-gcc-libs
-	provides = lib32-llvm-libs
-	conflicts = lib32-llvm-libs-svn
-	conflicts = lib32-llvm-libs
-	replaces = lib32-llvm-libs-svn
-	replaces = lib32-llvm-libs
-
-pkgname = lib32-clang-git
-	pkgdesc = C language family frontend for LLVM (32-bit)
-	depends = lib32-llvm-libs-git
-	depends = gcc-multilib
-	provides = lib32-clang
-	conflicts = lib32-clang
-	replaces = lib32-clang
-
-pkgname = lib32-llvm-git
-	pkgdesc = Low Level Virtual Machine (32-bit)(git version)
-	depends = lib32-llvm-libs-git=12.0.0_r376613.47991a15d192
-	depends = llvm-git
-	provides = lib32-llvm
-	conflicts = lib32-llvm
-	replaces = lib32-llvm
-

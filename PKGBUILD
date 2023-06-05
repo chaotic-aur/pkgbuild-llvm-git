@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=16.0.0_r448939.da5a8d14b8cc
+pkgver=17.0.0_r463216.29663e2b8c4e
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -163,7 +163,6 @@ package_polly-git() {
     _fakeinstall fakeinstall/usr/include/polly
     _fakeinstall fakeinstall/usr/lib/cmake/polly/
     _fakeinstall fakeinstall/usr/lib/*Polly*
-    _fakeinstall fakeinstall/usr/lib/libGPU*
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
      _fakeinstall fakeinstall/usr/share/doc/polly/*
      _fakeinstall fakeinstall/usr/share/man/man1/polly*
