@@ -2,9 +2,9 @@
 
 # Based on LordHeavy's LLVM
 pkgbase=llvm-git
-pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'llvm-libs-git' 'llvm-git')
+pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'spirv-llvm-translator-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=17.0.0_r463216.29663e2b8c4e
+pkgver=17.0.0_r464739.12c12c5fe0f0
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -51,11 +51,15 @@ prepare() {
     cd llvm-project
     # llvm-project contains a lot of stuff, remove parts that aren't used by this package
     rm -rf "$srcdir"/fakeinstall
+
+  cd llvm/projects
+  git clone https://github.com/KhronosGroup/SPIRV-LLVM-Translator.git
+
 }
 
 build() {
-    CFLAGS+=" -ffile-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug}"
-    CXXFLAGS+=" -ffile-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug}"
+    CFLAGS+=" -ffile-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug} -fno-lto"
+    CXXFLAGS+=" -ffile-prefix-map=$srcdir=${DBGSRCDIR:-/usr/src/debug} -fno-lto"
     CFLAGS+=' -I/usr/include/tensorflow'
     CXXFLAGS+=' -I/usr/include/tensorflow'
     CFLAGS+=' -fasynchronous-unwind-tables'
@@ -257,6 +261,20 @@ package_llvm-libs-git() {
     install -Dm644 "$srcdir"/llvm-project/llvm/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
+package_spirv-llvm-translator-git() {
+  pkgdesc="Tool and a library for bi-directional translation between SPIR-V and LLVM IR"
+  depends=("llvm-git=$pkgver-$pkgrel" 'spirv-tools')
+  provides=('spirv-llvm-translator')
+  conflicts=('spirv-llvm-translator')
+
+  _fakeinstall fakeinstall/usr/bin/llvm-spirv
+  _fakeinstall fakeinstall/usr/include/LLVMSPIRVLib
+  _fakeinstall fakeinstall/usr/lib/libLLVMSPIRVLib.*
+  _fakeinstall fakeinstall/usr/lib/pkgconfig/LLVMSPIRVLib.pc
+
+  install -Dm644 "$srcdir"/llvm-project/llvm/projects/SPIRV-LLVM-Translator/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
 package_llvm-git() {
     pkgdesc="Collection of modular and reusable compiler and toolchain technologies (git version)"
     depends=("llvm-libs-git=$pkgver-$pkgrel" 'perl' 'python-yaml' 'python-psutil' 'python-pygments')
@@ -281,6 +299,8 @@ package_llvm-git() {
     # Remove libs which conflict with llvm-libs
     rm -f "$pkgdir"/usr/lib/{libLLVM,libLTO,LLVMgold,libRemarks}.so
     rm -f "$pkgdir"/usr/lib/python3.8/site-packages/six.py
+    # remove spirv-headers files
+    rm -rf fakeinstall/usr/include/spirv
 
     if [[ $CARCH == x86_64 ]]; then
         # Needed for multilib (https://bugs.archlinux.org/task/29951)
