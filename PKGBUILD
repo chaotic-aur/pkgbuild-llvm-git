@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'spirv-llvm-translator-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=17.0.0_r464739.12c12c5fe0f0
+pkgver=17.0.0_r466579.07630da36a31
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -96,10 +96,8 @@ build() {
         -D SPHINX_OUTPUT_HTML=ON \
         -D SPHINX_OUTPUT_MAN=ON \
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
-        -D POLLY_ENABLE_GPGPU_CODEGEN=ON \
         -D LLVM_VERSION_SUFFIX="" \
         -D LLDB_ENABLE_PYTHON=ON \
-        -D LLDB_USE_SYSTEM_SIX=1 \
         -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang"
 
     ninja -C _build LLVMgold all
