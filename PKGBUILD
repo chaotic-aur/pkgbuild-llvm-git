@@ -4,15 +4,15 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'spirv-llvm-translator-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=17.0.0_r466579.07630da36a31
+pkgver=18.0.0_r469610.cf39dea58d8d
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
-             'python-sphinx' 'lua53'
-             'python-recommonmark' 'python-sphinx-automodapi' 'cuda' 'ocl-icd' 'opencl-headers' 'python-yaml' 'python-setuptools'
+             'python-sphinx' 'lua53' 'python-recommonmark' 'python-setuptools' 'python-six' 
+             'cuda' 'ocl-icd' 'opencl-headers' 'python-yaml' 'python-sphinx-automodapi'
              'swig' 'python' 'libunwind')
 
 source=("llvm-project::git+https://github.com/llvm/llvm-project.git"
@@ -22,7 +22,7 @@ md5sums=('SKIP'
          '295c343dcd457dc534662f011d7cff1a')
 sha512sums=('SKIP'
             '75e743dea28b280943b3cc7f8bbb871b57d110a7f2b9da2e6845c1c36bf170dd883fca54e463f5f49e0c3effe07fbd0db0f8cf5a12a2469d3f792af21a73fcdd')
-options=('staticlibs') # 'debug' takes way too long to scan for the source files...
+options=('staticlibs' '!emptydirs') # 'debug' takes way too long to scan for the source files...
 
 # NINJAFLAGS is an env var used to pass commandline options to ninja
 # NOTE: It's your responbility to validate the value of $NINJAFLAGS. If unsure, don't set it.
@@ -98,7 +98,8 @@ build() {
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
         -D LLVM_VERSION_SUFFIX="" \
         -D LLDB_ENABLE_PYTHON=ON \
-        -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang"
+        -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang" \
+        -D LLVM_ENABLE_DUMP=ON
 
     ninja -C _build LLVMgold all
     DESTDIR="$srcdir/fakeinstall" ninja -C _build install
