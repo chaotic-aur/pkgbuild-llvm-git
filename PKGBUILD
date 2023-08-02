@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'spirv-llvm-translator-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=18.0.0_r469610.cf39dea58d8d
+pkgver=18.0.0_r469943.5cb2a78ac2fe
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -13,7 +13,7 @@ license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
              'python-sphinx' 'lua53' 'python-recommonmark' 'python-setuptools' 'python-six' 
              'cuda' 'ocl-icd' 'opencl-headers' 'python-yaml' 'python-sphinx-automodapi'
-             'swig' 'python' 'libunwind')
+             'swig' 'python' 'libunwind' 'spirv-headers-git')
 
 source=("llvm-project::git+https://github.com/llvm/llvm-project.git"
         "llvm-config.h")
@@ -78,6 +78,7 @@ build() {
         -D CMAKE_BUILD_TYPE=Release \
         -D CMAKE_INSTALL_PREFIX=/usr \
         -D CMAKE_INSTALL_DOCDIR=/usr/share/doc \
+        -D CMAKE_POSITION_INDEPENDENT_CODE=ON \
         -D LLVM_APPEND_VC_REV=ON \
         -D LLVM_HOST_TRIPLE="$CHOST" \
         -D LLVM_ENABLE_RTTI=ON \
@@ -96,10 +97,12 @@ build() {
         -D SPHINX_OUTPUT_HTML=ON \
         -D SPHINX_OUTPUT_MAN=ON \
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
+        -D POLLY_ENABLE_GPGPU_CODEGEN=ON \
         -D LLVM_VERSION_SUFFIX="" \
         -D LLDB_ENABLE_PYTHON=ON \
         -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang" \
-        -D LLVM_ENABLE_DUMP=ON
+        -D LLVM_ENABLE_DUMP=ON \
+        -D LLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=/usr/include/spirv/
 
     ninja -C _build LLVMgold all
     DESTDIR="$srcdir/fakeinstall" ninja -C _build install
@@ -270,7 +273,8 @@ package_spirv-llvm-translator-git() {
   _fakeinstall fakeinstall/usr/include/LLVMSPIRVLib
   _fakeinstall fakeinstall/usr/lib/libLLVMSPIRVLib.*
   _fakeinstall fakeinstall/usr/lib/pkgconfig/LLVMSPIRVLib.pc
-
+ 
+  sed -i 's/17.0.0/18.0.0/g' $pkgdir/usr/lib/pkgconfig/LLVMSPIRVLib.pc
   install -Dm644 "$srcdir"/llvm-project/llvm/projects/SPIRV-LLVM-Translator/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
@@ -300,6 +304,7 @@ package_llvm-git() {
     rm -f "$pkgdir"/usr/lib/python3.8/site-packages/six.py
     # remove spirv-headers files
     rm -rf fakeinstall/usr/include/spirv
+    rm -rf fakeinstall/usr/share/cmake/SPIRV-Headers
 
     if [[ $CARCH == x86_64 ]]; then
         # Needed for multilib (https://bugs.archlinux.org/task/29951)
