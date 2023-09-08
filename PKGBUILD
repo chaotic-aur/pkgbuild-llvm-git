@@ -4,16 +4,17 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'spirv-llvm-translator-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=18.0.0_r469943.5cb2a78ac2fe
+pkgver=18.0.0_r474078.7b3f6e64a063
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
 url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
-             'python-sphinx' 'lua53' 'python-recommonmark' 'python-setuptools' 'python-six' 
-             'cuda' 'ocl-icd' 'opencl-headers' 'python-yaml' 'python-sphinx-automodapi'
-             'swig' 'python' 'libunwind' 'spirv-headers-git')
+             'python-sphinx' 'lua53' 'python-recommonmark' 'python-setuptools' 'python-six'
+             'cuda' 'ocl-icd' 'opencl-headers' 'python-yaml'
+             'swig' 'python' 'libunwind' 'spirv-headers-git'
+             'python-sphinx-furo' 'python-sphinx-automodapi')
 
 source=("llvm-project::git+https://github.com/llvm/llvm-project.git"
         "llvm-config.h")
@@ -97,7 +98,6 @@ build() {
         -D SPHINX_OUTPUT_HTML=ON \
         -D SPHINX_OUTPUT_MAN=ON \
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
-        -D POLLY_ENABLE_GPGPU_CODEGEN=ON \
         -D LLVM_VERSION_SUFFIX="" \
         -D LLDB_ENABLE_PYTHON=ON \
         -D LLVM_ENABLE_PROJECTS="lldb;polly;compiler-rt;lld;clang-tools-extra;clang" \
