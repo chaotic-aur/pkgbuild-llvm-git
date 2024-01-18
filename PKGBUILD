@@ -4,7 +4,7 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'spirv-llvm-translator-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=18.0.0_r474078.7b3f6e64a063
+pkgver=18.0.0_r486587.8dfc67d6724e
 pkgrel=1
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
@@ -12,7 +12,7 @@ url="https://llvm.org/"
 license=('custom:Apache 2.0 with LLVM Exception')
 makedepends=('git' 'cmake' 'ninja' 'libffi' 'libedit' 'ncurses' 'libxml2'
              'python-sphinx' 'lua53' 'python-recommonmark' 'python-setuptools' 'python-six'
-             'cuda' 'ocl-icd' 'opencl-headers' 'python-yaml'
+             'cuda' 'ocl-icd' 'opencl-headers' 'python-yaml' 'python-myst-parser'
              'swig' 'python' 'libunwind' 'spirv-headers-git'
              'python-sphinx-furo' 'python-sphinx-automodapi')
 
@@ -95,8 +95,8 @@ build() {
         -D LLVM_INCLUDE_BENCHMARKS=OFF \
         -D LLVM_EXPERIMENTAL_TARGETS_TO_BUILD=AVR \
         -D LLVM_ENABLE_SPHINX=ON \
-        -D SPHINX_OUTPUT_HTML=ON \
-        -D SPHINX_OUTPUT_MAN=ON \
+        -D SPHINX_OUTPUT_HTML=OFF \
+        -D SPHINX_OUTPUT_MAN=FF \
         -D SPHINX_WARNINGS_AS_ERRORS=OFF \
         -D LLVM_VERSION_SUFFIX="" \
         -D LLDB_ENABLE_PYTHON=ON \
@@ -132,10 +132,10 @@ package_lldb-git() {
     _fakeinstall fakeinstall/usr/include/lldb
     _fakeinstall fakeinstall/usr/lib/liblldb*
     _fakeinstall fakeinstall/usr/lib/python"$_pythonver"/site-packages/lldb
-    _fakeinstall fakeinstall/usr/share/man/man1/lldb*
-    _fakeinstall fakeinstall/usr/share/doc/lldb/*
+#    _fakeinstall fakeinstall/usr/share/man/man1/lldb*
+#    _fakeinstall fakeinstall/usr/share/doc/lldb/*
     install -Dm644 "$srcdir"/llvm-project/lldb/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-    rm -r "$pkgdir"/usr/share/doc/lldb/html/.buildinfo
+#    rm -r "$pkgdir"/usr/share/doc/lldb/html/.buildinfo
 }
 
 package_lld-git(){
@@ -150,12 +150,12 @@ package_lld-git(){
     _fakeinstall fakeinstall/usr/lib/liblld*
     _fakeinstall fakeinstall/usr/lib/cmake/lld/
     _fakeinstall fakeinstall/usr/bin/{lld*,*.lld,wasm-ld}
-    _fakeinstall fakeinstall/usr/share/doc/lld/*
-    install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
+ #   _fakeinstall fakeinstall/usr/share/doc/lld/*
+ #   install -Dm644 "$srcdir"/llvm-project/lld/docs/ld.lld.1 "$pkgdir/usr/share/man/man1"
     install -Dm644 "$srcdir"/llvm-project/lld/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
     #cd $pkgdir/usr/share/doc/lld
     #mv lld/* .
-    rm -r "$pkgdir"/usr/share/doc/lld/html/{_sources,.buildinfo}
+#    rm -r "$pkgdir"/usr/share/doc/lld/html/{_sources,.buildinfo}
 }
 
 package_polly-git() {
@@ -170,9 +170,9 @@ package_polly-git() {
     _fakeinstall fakeinstall/usr/lib/cmake/polly/
     _fakeinstall fakeinstall/usr/lib/*Polly*
     install -Dm644 "$srcdir"/llvm-project/polly/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-     _fakeinstall fakeinstall/usr/share/doc/polly/*
-     _fakeinstall fakeinstall/usr/share/man/man1/polly*
-     rm -r "$pkgdir"/usr/share/doc/polly/html/{_sources,.buildinfo}
+ #    _fakeinstall fakeinstall/usr/share/doc/polly/*
+ #    _fakeinstall fakeinstall/usr/share/man/man1/polly*
+ #    rm -r "$pkgdir"/usr/share/doc/polly/html/{_sources,.buildinfo}
 }
 
 package_compiler-rt-git() {
@@ -218,13 +218,13 @@ package_clang-git() {
     _fakeinstall fakeinstall/usr/lib/cmake/clang
 
     _fakeinstall fakeinstall/usr/libexec
-    _fakeinstall fakeinstall/usr/share/doc/clang*
-    _fakeinstall fakeinstall/usr/share/clang
+  #  _fakeinstall fakeinstall/usr/share/doc/clang*
+  #  _fakeinstall fakeinstall/usr/share/clang
     _fakeinstall fakeinstall/usr/share/scan{-build,-view}
-    _fakeinstall fakeinstall/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*
+  #  _fakeinstall fakeinstall/usr/share/man/man1/{clang,diagtool,extraclangtools,scan-build}*
 
     # Remove documentation sources
-    rm -rf "$pkgdir"/usr/share/doc/clang{,-tools}/html/{_sources,.buildinfo}
+  #  rm -rf "$pkgdir"/usr/share/doc/clang{,-tools}/html/{_sources,.buildinfo}
 
     # Move scanbuild-py into site-packages and install Python bindings
     local site_packages=$(python -c "import site; print(site.getsitepackages()[0])")
@@ -298,7 +298,7 @@ package_llvm-git() {
 
     cp "$pkgdir"/usr/bin/lit "$pkgdir"/usr/bin/llvm-lit
     # Remove documentation sources
-    rm -rf "$pkgdir"/usr/share/doc/llvm/html/{_sources,.buildinfo}
+   # rm -rf "$pkgdir"/usr/share/doc/llvm/html/{_sources,.buildinfo}
     # Remove libs which conflict with llvm-libs
     rm -f "$pkgdir"/usr/lib/{libLLVM,libLTO,LLVMgold,libRemarks}.so
     rm -f "$pkgdir"/usr/lib/python3.8/site-packages/six.py
