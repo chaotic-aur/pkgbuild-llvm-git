@@ -4,8 +4,9 @@
 pkgbase=llvm-git
 pkgname=('lldb-git' 'lld-git' 'polly-git' 'compiler-rt-git' 'clang-git' 'spirv-llvm-translator-git' 'llvm-libs-git' 'llvm-git')
 pkgdesc='Low Level Virtual Machine (git version)'
-pkgver=19.0.0_r493119.a5f576e5961e
+pkgver=19.0.0_r499786.56d319e7e40e
 pkgrel=1
+epoch=2
 groups=('chaotic-mesa-git')
 arch=('x86_64' 'armv7h' 'aarch64')
 url="https://llvm.org/"
@@ -126,7 +127,7 @@ package_lldb-git() {
 
     pkgdesc="Next generation, high-performance debugger (git version)"
     url="https://lldb.llvm.org/"
-    depends=("clang-git=$pkgver-$pkgrel" "llvm-libs-git=$pkgver-$pkgrel" "lua53" "zstd" "libxml2" "python")
+    depends=("clang-git=$epoch:$pkgver-$pkgrel" "llvm-libs-git=$epoch:$pkgver-$pkgrel" "lua53" "zstd" "libxml2" "python")
     provides=("lldb=$pkgver")
     replaces=('lldb-svn')
     optdepends=('lua53: scripting support')
@@ -144,7 +145,9 @@ package_lldb-git() {
 package_lld-git(){
     pkgdesc="Linker from the LLVM project"
     url="https://lld.llvm.org"
-    depends=("llvm-libs-git=$pkgver-$pkgrel" "zstd")
+    depends=("llvm-libs-git=$epoch:$pkgver-$pkgrel"
+             "zstd"
+             "llvm-git=$epoch:$pkgver-$pkgrel")
     provides=("lld=$pkgver")
     replaces=('lld-svn')
     conflicts=('lld' 'lld-svn')
@@ -162,7 +165,7 @@ package_lld-git(){
 package_polly-git() {
     pkgdesc="Polly is a high-level loop and data-locality optimizer and optimization infrastructure for LLVM"
     url="https://polly.llvm.org/"
-    depends=("llvm-libs-git=$pkgver-$pkgrel" 'glibc' 'gcc-libs')
+    depends=("llvm-libs-git=$epoch:$pkgver-$pkgrel" 'glibc' 'gcc-libs')
     provides=("polly=$pkgver")
     replaces=('polly-svn')
     conflicts=('polly' 'polly-svn')
@@ -179,7 +182,7 @@ package_polly-git() {
 package_compiler-rt-git() {
     pkgdesc="Compiler runtime libraries for clang (git version)"
     url="https://compiler-rt.llvm.org/"
-    depends=('gcc-libs' "llvm-git=$pkgver-$pkgrel")
+    depends=('gcc-libs' "llvm-git=$epoch:$pkgver-$pkgrel")
     provides=("compiler-rt=$pkgver")
     replaces=('compiler-rt-svn')
     conflicts=('compiler-rt' 'compiler-rt-svn')
@@ -198,7 +201,7 @@ package_clang-git() {
 
     pkgdesc="C language family frontend for LLVM (git version)"
     url="http://clang.llvm.org/"
-    depends=("llvm-libs-git=$pkgver-$pkgrel" 'gcc' "compiler-rt-git=$pkgver-$pkgrel" "python-yaml")
+    depends=("llvm-libs-git=$epoch:$pkgver-$pkgrel" 'gcc' "compiler-rt-git=$epoch:$pkgver-$pkgrel" "python-yaml")
     optdepends=('llvm-git: refered by some clang-headers'
                 'python: for scan-view and git-clang-format'
                 'perl: for scanbuild, c++-analyzer, and ccc-analyzer')
@@ -249,7 +252,15 @@ package_clang-git() {
 
 package_llvm-libs-git() {
     pkgdesc="LLVM runtime libraries (git version)"
-    depends=('gcc-libs' 'zlib' 'libffi' 'libedit' 'libxml2' 'ncurses' 'tensorflow' 'zstd')
+    depends=('gcc-libs'
+             'zlib'
+             'libffi'
+             'libedit'
+             'libxml2'
+             'ncurses'
+             'tensorflow'
+             'zstd'
+             "llvm-git=$epoch:$pkgver-$pkgrel")
     provides=("llvm-libs=$pkgver")
     replaces=('llvm-libs-svn')
     conflicts=('llvm-libs-svn' 'llvm-libs')
@@ -266,7 +277,7 @@ package_llvm-libs-git() {
 
 package_spirv-llvm-translator-git() {
   pkgdesc="Tool and a library for bi-directional translation between SPIR-V and LLVM IR"
-  depends=("llvm-git=$pkgver-$pkgrel" 'spirv-tools')
+  depends=("llvm-git=$epoch:$pkgver-$pkgrel" 'spirv-tools')
   provides=('spirv-llvm-translator')
   conflicts=('spirv-llvm-translator')
 
@@ -274,14 +285,14 @@ package_spirv-llvm-translator-git() {
   _fakeinstall fakeinstall/usr/include/LLVMSPIRVLib
   _fakeinstall fakeinstall/usr/lib/libLLVMSPIRVLib.*
   _fakeinstall fakeinstall/usr/lib/pkgconfig/LLVMSPIRVLib.pc
- 
+
   sed -i 's/17.0.0/18.0.0/g' $pkgdir/usr/lib/pkgconfig/LLVMSPIRVLib.pc
   install -Dm644 "$srcdir"/llvm-project/llvm/projects/SPIRV-LLVM-Translator/LICENSE.TXT "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_llvm-git() {
     pkgdesc="Collection of modular and reusable compiler and toolchain technologies (git version)"
-    depends=("llvm-libs-git=$pkgver-$pkgrel" 'perl' 'python-yaml' 'python-psutil' 'python-pygments' 'libxml2' 'zstd' 'libedit' 'libffi')
+    depends=("llvm-libs-git=$epoch:$pkgver-$pkgrel" 'perl' 'python-yaml' 'python-psutil' 'python-pygments' 'libxml2' 'zstd' 'libedit' 'libffi')
     optdepends=('python-setuptools: for using lit (LLVM Integrated Tester)')
     provides=("llvm=$pkgver")
     replaces=('llvm-svn')
